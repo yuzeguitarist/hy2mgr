@@ -15,7 +15,7 @@
 在全新 VPS 上：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<YOU>/hy2mgr/main/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/yuzeguitarist/hy2mgr/main/scripts/install.sh | sudo bash
 ```
 
 完成后输出：
