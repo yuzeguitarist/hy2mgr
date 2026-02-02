@@ -75,6 +75,14 @@ var installCmd = &cobra.Command{
 			return err
 		}
 
+		if !dry {
+			if err := app.EnsureDir(app.AuditDir, 0750); err != nil {
+				return fmt.Errorf("ensure audit dir: %w", err)
+			}
+		} else {
+			fmt.Println("[dry-run] ensure", app.AuditDir)
+		}
+
 		fmt.Println(app.Color("==> Installing hy2mgr systemd service", "1;34"))
 		if err := installManagerUnit(dry); err != nil {
 			return err
@@ -140,10 +148,11 @@ ExecStart=/usr/local/bin/hy2mgr web --listen 0.0.0.0:3333
 Restart=on-failure
 RestartSec=2s
 NoNewPrivileges=true
+LogsDirectory=hy2mgr
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/etc/hy2mgr /etc/hysteria /var/log/hy2mgr
+ReadWritePaths=/etc/hy2mgr /etc/hysteria
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 LockPersonality=true
 MemoryDenyWriteExecute=true
