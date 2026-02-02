@@ -17,7 +17,7 @@ type Settings struct {
 	SNI               string `json:"sni"`               // default SNI for clients
 	MasqueradeURL     string `json:"masqueradeUrl"`     // reverse proxy target
 	MasqueradeRewrite bool   `json:"masqueradeRewrite"` // rewriteHost
-	ManageListen      string `json:"manageListen"`      // web UI bind, default 127.0.0.1:3333
+	ManageListen      string `json:"manageListen"`      // web UI bind, default 0.0.0.0:3333
 	ManagePublic      bool   `json:"managePublic"`      // if true, bind to 0.0.0.0 (explicit)
 }
 
@@ -62,7 +62,7 @@ func Default() *State {
 			SNI:               "www.bing.com",
 			MasqueradeURL:     "https://www.bing.com",
 			MasqueradeRewrite: true,
-			ManageListen:      "127.0.0.1:3333",
+			ManageListen:      "0.0.0.0:3333",
 			ManagePublic:      false,
 		},
 		Admin: Admin{

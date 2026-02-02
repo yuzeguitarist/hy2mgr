@@ -148,6 +148,11 @@ func (s *Server) requireLogin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sess, _ := s.Store.Get(r, "hy2mgr")
 		if v, ok := sess.Values["auth"].(bool); !ok || !v {
+			accept := r.Header.Get("Accept")
+			if r.Method == http.MethodGet && strings.Contains(accept, "text/html") {
+				http.Redirect(w, r, "/login", http.StatusFound)
+				return
+			}
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

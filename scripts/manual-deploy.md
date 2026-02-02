@@ -37,7 +37,11 @@ sudo hy2mgr node ls
 sudo hy2mgr export uri --id <NODE_ID>
 ```
 
-## 5) Access Web UI (recommended: SSH port-forward)
+## 5) Access Web UI
+Direct access:
+http://YOUR_VPS_IP:3333
+
+Or SSH port-forward (safer):
 ```bash
 ssh -L 3333:127.0.0.1:3333 root@YOUR_VPS_IP
 # then open http://127.0.0.1:3333

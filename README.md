@@ -21,10 +21,13 @@ curl -fsSL https://raw.githubusercontent.com/yuzeguitarist/hy2mgr/main/scripts/i
 完成后输出：
 - 管理员用户名/密码（只显示一次）
 - 订阅 token 与订阅 URL（只显示一次）
-- Web UI 默认监听 `127.0.0.1:3333`
+- Web UI 默认监听 `0.0.0.0:3333`
 
-### 访问 Web UI（安全推荐）
-通过 SSH 端口转发：
+### 访问 Web UI
+直接访问：
+http://YOUR_VPS_IP:3333
+
+或通过 SSH 端口转发（更安全）：
 ```bash
 ssh -L 3333:127.0.0.1:3333 root@YOUR_VPS_IP
 # 浏览器打开 http://127.0.0.1:3333
@@ -156,6 +159,7 @@ sudo hy2mgr uninstall --purge
 ---
 
 ## 安全提示（重要）
-- Web UI 默认 **只监听 127.0.0.1**。远程访问请优先使用 **SSH 端口转发**。
+- Web UI 默认 **监听 0.0.0.0:3333**。请在云安全组/防火墙放行 TCP/3333；公网访问建议优先使用 **HTTPS 反代**。
+- 如需更安全的访问方式，可使用 **SSH 端口转发**。
 - 如果必须公网访问，请用 Nginx/Caddy 做 HTTPS 反代，并加额外访问控制（IP allowlist / 2FA）。
 - 订阅 URL 必须保密：token 一旦泄露，任何人都能获取节点链接；可用 `hy2mgr export subscription --rotate` 立即吊销旧 token。

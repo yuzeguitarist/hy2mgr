@@ -81,7 +81,7 @@ var exportSubCmd = &cobra.Command{
 				return err
 			}
 			fmt.Println("New token (shown once):", token)
-			fmt.Println("Subscription URL:", "http://127.0.0.1:3333"+path)
+			fmt.Println("Subscription URL:", "http://YOUR_VPS_IP:3333"+path)
 			return nil
 		}
 		fmt.Println("Token is stored hashed; to show a usable URL, rotate it:")

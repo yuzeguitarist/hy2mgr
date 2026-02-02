@@ -37,6 +37,8 @@ echo "==> Running hy2mgr install"
 hy2mgr install
 
 echo "==> Done."
-echo "Open Web UI via SSH port-forward:"
+echo "Open Web UI:"
+echo "  http://YOUR_VPS_IP:3333 (ensure firewall allows TCP/3333)"
+echo "Or via SSH port-forward (safer):"
 echo "  ssh -L 3333:127.0.0.1:3333 root@YOUR_VPS_IP"
 echo "  then open http://127.0.0.1:3333"

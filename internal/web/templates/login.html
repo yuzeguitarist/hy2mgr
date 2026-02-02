@@ -22,7 +22,7 @@
     {{if .Error}}<div class="err">{{.Error}}</div>{{end}}
     <button type="submit">Login</button>
   </form>
-  <p class="hint">Default bind: 127.0.0.1 only. For remote access, use SSH port-forward or reverse proxy with HTTPS.</p>
+  <p class="hint">Default bind: 0.0.0.0:3333. Ensure firewall allows TCP/3333; use HTTPS reverse proxy if exposed to Internet.</p>
 </div>
 </body>
 </html>

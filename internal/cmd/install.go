@@ -60,7 +60,7 @@ var installCmd = &cobra.Command{
 			fmt.Println("    password:", pw)
 			fmt.Println("==> Subscription URL token (shown once):")
 			fmt.Println("    token:", token)
-			fmt.Println("    url:   http://127.0.0.1:3333/sub/" + token)
+			fmt.Println("    url:   http://YOUR_VPS_IP:3333/sub/" + token)
 			fmt.Println("    (Rotate later: hy2mgr export subscription --rotate)")
 		}
 
@@ -78,7 +78,7 @@ var installCmd = &cobra.Command{
 		}
 
 		fmt.Println("Done.")
-		fmt.Println("Web UI (default local-only): http://127.0.0.1:3333 (use SSH port-forward)")
+		fmt.Println("Web UI: http://YOUR_VPS_IP:3333 (ensure firewall allows TCP/3333)")
 		return nil
 	},
 }
@@ -97,7 +97,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/hy2mgr web --listen 127.0.0.1:3333
+ExecStart=/usr/local/bin/hy2mgr web --listen 0.0.0.0:3333
 Restart=on-failure
 RestartSec=2s
 NoNewPrivileges=true
