@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/example/hy2mgr/internal/app"
-	"github.com/example/hy2mgr/internal/state"
-	"github.com/example/hy2mgr/internal/web"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/state"
+	"github.com/yuzeguitarist/hy2mgr/internal/web"
 	"github.com/spf13/cobra"
 )
 

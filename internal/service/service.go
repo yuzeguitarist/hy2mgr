@@ -12,13 +12,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/example/hy2mgr/internal/app"
-	"github.com/example/hy2mgr/internal/crypto"
-	"github.com/example/hy2mgr/internal/firewall"
-	"github.com/example/hy2mgr/internal/hysteria"
-	"github.com/example/hy2mgr/internal/netutil"
-	"github.com/example/hy2mgr/internal/state"
-	"github.com/example/hy2mgr/internal/systemd"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/crypto"
+	"github.com/yuzeguitarist/hy2mgr/internal/firewall"
+	"github.com/yuzeguitarist/hy2mgr/internal/hysteria"
+	"github.com/yuzeguitarist/hy2mgr/internal/netutil"
+	"github.com/yuzeguitarist/hy2mgr/internal/state"
+	"github.com/yuzeguitarist/hy2mgr/internal/systemd"
 )
 
 
@@ -101,6 +101,33 @@ func Apply(st *state.State, dryRun bool) error {
 		_ = systemd.Restart(app.HysteriaService)
 	}
 	return nil
+}
+
+// RotateCert creates a new self-signed cert/key pair and writes to disk.
+func RotateCert(st *state.State, dryRun bool) error {
+	var ipAddrs []net.IP
+	if st != nil && st.Settings.ListenHost != "" {
+		if ip := net.ParseIP(st.Settings.ListenHost); ip != nil {
+			ipAddrs = append(ipAddrs, ip)
+		}
+	}
+	if len(ipAddrs) == 0 {
+		if ip := net.ParseIP(detectPublicIP()); ip != nil {
+			ipAddrs = append(ipAddrs, ip)
+		}
+	}
+	if len(ipAddrs) == 0 {
+		ipAddrs = append(ipAddrs, net.ParseIP("127.0.0.1"))
+	}
+
+	certPEM, keyPEM, _, err := crypto.GenerateSelfSigned(ipAddrs, 3650)
+	if err != nil {
+		return err
+	}
+	if dryRun {
+		return nil
+	}
+	return crypto.WriteCertFiles(certPEM, keyPEM, 0, 0)
 }
 
 // FixKeyPermission repairs tls.key permission denied when hysteria runs as non-root.

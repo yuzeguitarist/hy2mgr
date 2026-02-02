@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/example/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
 )
 
 type Backend string
@@ -35,11 +35,14 @@ func EnsureUDPPortOpen(port int, dryRun bool) (Backend, string, error) {
 	b := Detect()
 	switch b {
 	case BackendUFW:
-		return b, ensureUFW(port, dryRun)
+		msg, err := ensureUFW(port, dryRun)
+		return b, msg, err
 	case BackendFirewalld:
-		return b, ensureFirewalld(port, dryRun)
+		msg, err := ensureFirewalld(port, dryRun)
+		return b, msg, err
 	case BackendIptables:
-		return b, ensureIptables(port, dryRun)
+		msg, err := ensureIptables(port, dryRun)
+		return b, msg, err
 	default:
 		return b, "No supported firewall backend detected; skipped local firewall rules.", nil
 	}

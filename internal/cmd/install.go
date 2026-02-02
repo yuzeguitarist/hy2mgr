@@ -7,9 +7,9 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/example/hy2mgr/internal/app"
-	"github.com/example/hy2mgr/internal/systemd"
-	"github.com/example/hy2mgr/internal/web"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/service"
+	"github.com/yuzeguitarist/hy2mgr/internal/systemd"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -65,7 +65,7 @@ var installCmd = &cobra.Command{
 		}
 
 		fmt.Println("==> Applying configuration (idempotent)")
-		if err := web.Apply(st, dry); err != nil {
+		if err := service.Apply(st, dry); err != nil {
 			return err
 		}
 

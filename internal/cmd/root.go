@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/example/hy2mgr/internal/app"
-	"github.com/example/hy2mgr/internal/state"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/state"
 	"github.com/spf13/cobra"
 )
 

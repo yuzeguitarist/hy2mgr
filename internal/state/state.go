@@ -8,7 +8,7 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/example/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
 )
 
 type Settings struct {

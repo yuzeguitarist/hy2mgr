@@ -5,8 +5,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/example/hy2mgr/internal/app"
-	"github.com/example/hy2mgr/internal/systemd"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/systemd"
 	"github.com/spf13/cobra"
 )
 

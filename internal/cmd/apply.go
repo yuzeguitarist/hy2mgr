@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/example/hy2mgr/internal/app"
-	"github.com/example/hy2mgr/internal/web"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/service"
 	"github.com/spf13/cobra"
 )
 
@@ -19,10 +19,10 @@ var applyCmd = &cobra.Command{
 		st := mustLoadState()
 		if dry {
 			fmt.Println("==> Preview of config (passwords masked)")
-			prev, _ := web.SaveConfigPreview(st)
+			prev, _ := service.SaveConfigPreview(st)
 			fmt.Println(prev)
 		}
-		if err := web.Apply(st, dry); err != nil {
+		if err := service.Apply(st, dry); err != nil {
 			return err
 		}
 		fmt.Println("Applied.")

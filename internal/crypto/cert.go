@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/example/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
 )
 
 // GenerateSelfSigned creates a self-signed ECDSA cert with ONLY IP SANs.

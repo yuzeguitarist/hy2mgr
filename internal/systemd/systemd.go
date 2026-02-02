@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/example/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
 )
 
 func Systemctl(args ...string) (string, error) {

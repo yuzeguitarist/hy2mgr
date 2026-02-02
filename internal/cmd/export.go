@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/example/hy2mgr/internal/app"
-	"github.com/example/hy2mgr/internal/qr"
-	"github.com/example/hy2mgr/internal/service"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/qr"
+	"github.com/yuzeguitarist/hy2mgr/internal/service"
 	"github.com/spf13/cobra"
 )
 

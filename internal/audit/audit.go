@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/example/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/app"
 )
 
 type Entry struct {
