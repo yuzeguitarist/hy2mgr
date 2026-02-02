@@ -120,6 +120,14 @@ sudo hy2mgr cert rotate
 - `hy2mgr cert rotate` 会生成新自签证书，pin 会变化
 - 重新导出节点 URI 或订阅更新即可
 
+7) **日志里出现 `accepting stream failed: Application error 0x0 (remote)`**
+- 这通常表示**客户端主动断开**或**正常关闭连接**（remote close），不是服务端崩溃
+- 若仅零星出现且业务正常，可忽略
+- 若频繁出现并伴随连接不稳定，建议排查：
+  - 客户端网络抖动/UDP 丢包（切换网络或调低拥塞/MTU）
+  - 端口被中间网络设备限速/丢弃（换端口后再试）
+  - 时间不同步导致握手异常（校准系统时间）
+
 ---
 
 ## 备份与恢复
