@@ -80,7 +80,23 @@ var installCmd = &cobra.Command{
 			return err
 		}
 		if !dry {
-			_ = systemd.EnableNow(app.ManagerService)
+			if err := systemd.EnableNow(app.ManagerService); err != nil {
+				return err
+			}
+			if err := systemd.Restart(app.ManagerService); err != nil {
+				fmt.Println(app.Color("!! Failed to restart hy2mgr.service", "1;31"), err)
+			}
+			active, _ := systemd.IsActive(app.ManagerService)
+			if !active {
+				fmt.Println(app.Color("!! hy2mgr.service is not running", "1;31"))
+				if out, err := systemd.Status(app.ManagerService); err == nil && out != "" {
+					fmt.Println(out)
+				}
+				if logs, err := systemd.JournalTail(app.ManagerService, 120); err == nil && logs != "" {
+					fmt.Println(app.Color("==> Recent logs (hy2mgr.service)", "1;33"))
+					fmt.Println(logs)
+				}
+			}
 		}
 
 		fmt.Println(app.Color("Done.", "1;32"))
