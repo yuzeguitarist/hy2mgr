@@ -68,13 +68,19 @@ func (s *Server) Router() http.Handler {
 	authed.HandleFunc("/api/admin/password", s.apiAdminPassword).Methods("POST")
 
 	// CSRF for all POSTs
-	return csrf.Protect([]byte("change-this-in-prod"), csrf.Secure(false))(r)
+	return csrf.Protect(
+		[]byte("change-this-in-prod"),
+		csrf.Secure(false),
+		csrf.FieldName("csrf_token"),
+	)(r)
 }
 
 func (s *Server) appShell(w http.ResponseWriter, r *http.Request) {
 	b, _ := FS.ReadFile("templates/layout.html")
+	html := string(b)
+	html = strings.ReplaceAll(html, "{{.CSRFToken}}", csrf.Token(r))
 	w.Header().Set("content-type", "text/html; charset=utf-8")
-	_, _ = w.Write(b)
+	_, _ = w.Write([]byte(html))
 }
 
 func (s *Server) loginPage(w http.ResponseWriter, r *http.Request) {

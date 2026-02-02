@@ -10,7 +10,13 @@ const el = (tag, attrs={}, children=[]) => {
 };
 
 async function api(path, opts={}){
-  const r = await fetch(path, {credentials:'same-origin', ...opts});
+  const method = (opts.method || 'GET').toUpperCase();
+  const headers = new Headers(opts.headers || {});
+  if(method !== 'GET' && method !== 'HEAD'){
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if(token) headers.set('X-CSRF-Token', token);
+  }
+  const r = await fetch(path, {credentials:'same-origin', ...opts, headers});
   if(r.status===401){ location.href="/login"; return; }
   const ct = r.headers.get('content-type')||'';
   if(ct.includes('application/json')) return await r.json();
@@ -108,8 +114,8 @@ async function renderNodes(root){
   body.appendChild(t);
 
   // modal
-  const modal = el('div',{id:'modal',style:'display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center'},[
-    el('div',{class:'card',style:'max-width:680px;width:92vw'},[
+  const modal = el('div',{id:'modal',class:'modal',style:'display:none'},[
+    el('div',{class:'card modal-card'},[
       el('div',{class:'row'},[
         el('h3',{style:'margin:0;flex:1'},['Node QR']),
         el('button',{class:'btn',id:'closeModal'},['Close']),
@@ -125,7 +131,7 @@ async function renderNodes(root){
     mb.innerHTML='';
     mb.appendChild(el('p',{},['URI:']));
     mb.appendChild(el('pre',{},[uri.uri]));
-    const img = el('img',{src:'/api/nodes/'+id+'/qrcode.png', style:'max-width:280px;border-radius:10px;border:1px solid #22335f'});
+    const img = el('img',{src:'/api/nodes/'+id+'/qrcode.png', class:'qr-image'});
     mb.appendChild(img);
     mb.appendChild(el('div',{class:'row'},[
       el('a',{class:'btn',href:'/api/nodes/'+id+'/qrcode.png'},['Download PNG']),
