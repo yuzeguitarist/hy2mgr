@@ -8,7 +8,7 @@ set -euo pipefail
 #   HY2MGR_REPO=https://github.com/<YOU>/hy2mgr.git  (default: current repo URL)
 #   HY2MGR_REF=main
 
-HY2MGR_REPO="${HY2MGR_REPO:-https://github.com/example/hy2mgr.git}"
+HY2MGR_REPO="${HY2MGR_REPO:-https://github.com/yuzeguitarist/hy2mgr.git}"
 HY2MGR_REF="${HY2MGR_REF:-main}"
 
 if [[ $EUID -ne 0 ]]; then
