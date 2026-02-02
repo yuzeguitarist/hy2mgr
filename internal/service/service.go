@@ -112,7 +112,7 @@ func RotateCert(st *state.State, dryRun bool) error {
 		}
 	}
 	if len(ipAddrs) == 0 {
-		if ip := net.ParseIP(detectPublicIP()); ip != nil {
+		if ip := net.ParseIP(netutil.PublicIP()); ip != nil {
 			ipAddrs = append(ipAddrs, ip)
 		}
 	}
@@ -249,7 +249,7 @@ func NodeURI(st *state.State, id string) (string, error) {
 	pin, _ := crypto.ParseCertPin(app.HysteriaCertPath)
 	host := st.Settings.ListenHost
 	if host == "" {
-		host = detectPublicIP()
+		host = netutil.PublicIP()
 	}
 	auth := url.QueryEscape(n.Username + ":" + n.Password)
 	q := url.Values{}
@@ -259,37 +259,6 @@ func NodeURI(st *state.State, id string) (string, error) {
 		q.Set("pinSHA256", pin)
 	}
 	return fmt.Sprintf("hysteria2://%s@%s:%d/?%s", auth, host, st.Settings.ListenPort, q.Encode()), nil
-}
-
-func detectPublicIP() string {
-	ifaces, _ := net.Interfaces()
-	for _, iface := range ifaces {
-		if (iface.Flags&net.FlagUp) == 0 || (iface.Flags&net.FlagLoopback) != 0 {
-			continue
-		}
-		addrs, _ := iface.Addrs()
-		for _, a := range addrs {
-			ip := parseIP(a.String())
-			if ip == "" {
-				continue
-			}
-			if strings.HasPrefix(ip, "10.") || strings.HasPrefix(ip, "192.168.") || strings.HasPrefix(ip, "172.") || strings.HasPrefix(ip, "127.") {
-				continue
-			}
-			return ip
-		}
-	}
-	return "YOUR_VPS_IP"
-}
-
-func parseIP(s string) string {
-	if strings.Contains(s, "/") {
-		s = strings.SplitN(s, "/", 2)[0]
-	}
-	if net.ParseIP(s) != nil {
-		return s
-	}
-	return ""
 }
 
 func SubscriptionRotate(st *state.State) (string, string, error) {

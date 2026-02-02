@@ -54,7 +54,10 @@ var webCmd = &cobra.Command{
 			ReadHeaderTimeout: 5 * time.Second,
 		}
 
-		fmt.Println("Listening:", listen)
+		fmt.Println(app.Color("Listening:", "1;34"), listen)
+		if url := webURLFromListen(listen); url != "" {
+			fmt.Println(app.Color("Web UI:", "1;32"), url)
+		}
 		return httpSrv.ListenAndServe()
 	},
 }

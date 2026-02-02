@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/netutil"
 	"github.com/yuzeguitarist/hy2mgr/internal/qr"
 	"github.com/yuzeguitarist/hy2mgr/internal/service"
 	"github.com/spf13/cobra"
@@ -81,7 +82,11 @@ var exportSubCmd = &cobra.Command{
 				return err
 			}
 			fmt.Println("New token (shown once):", token)
-			fmt.Println("Subscription URL:", "http://YOUR_VPS_IP:3333"+path)
+			base := webURLFromListen(st.Settings.ManageListen)
+			if base == "" {
+				base = "http://" + netutil.PublicIP() + ":3333"
+			}
+			fmt.Println("Subscription URL:", base+path)
 			return nil
 		}
 		fmt.Println("Token is stored hashed; to show a usable URL, rotate it:")

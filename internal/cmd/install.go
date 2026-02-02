@@ -4,10 +4,12 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"net"
 	"os"
 	"os/exec"
 
 	"github.com/yuzeguitarist/hy2mgr/internal/app"
+	"github.com/yuzeguitarist/hy2mgr/internal/netutil"
 	"github.com/yuzeguitarist/hy2mgr/internal/service"
 	"github.com/yuzeguitarist/hy2mgr/internal/systemd"
 	"github.com/spf13/cobra"
@@ -24,7 +26,7 @@ var installCmd = &cobra.Command{
 		dry, _ := cmd.Flags().GetBool("dry-run")
 		ver, _ := cmd.Flags().GetString("version")
 
-		fmt.Println("==> Installing/Upgrading Hysteria2 via official script (get.hy2.sh)")
+		fmt.Println(app.Color("==> Installing/Upgrading Hysteria2 via official script (get.hy2.sh)", "1;34"))
 		// Official script usage: bash <(curl -fsSL https://get.hy2.sh/) citeturn7view0
 		if dry {
 			fmt.Println("[dry-run] bash <(curl -fsSL https://get.hy2.sh/)", versionArg(ver))
@@ -55,21 +57,25 @@ var installCmd = &cobra.Command{
 
 			_ = st.SaveAtomic()
 
-			fmt.Println("==> Admin credentials (shown once):")
+			fmt.Println(app.Color("==> Admin credentials (shown once):", "1;36"))
 			fmt.Println("    username:", st.Admin.Username)
 			fmt.Println("    password:", pw)
-			fmt.Println("==> Subscription URL token (shown once):")
+			fmt.Println(app.Color("==> Subscription URL (shown once):", "1;36"))
 			fmt.Println("    token:", token)
-			fmt.Println("    url:   http://YOUR_VPS_IP:3333/sub/" + token)
+			subBase := webURLFromListen(st.Settings.ManageListen)
+			if subBase == "" {
+				subBase = "http://" + netutil.PublicIP() + ":3333"
+			}
+			fmt.Println("    url:", subBase+"/sub/"+token)
 			fmt.Println("    (Rotate later: hy2mgr export subscription --rotate)")
 		}
 
-		fmt.Println("==> Applying configuration (idempotent)")
+		fmt.Println(app.Color("==> Applying configuration (idempotent)", "1;34"))
 		if err := service.Apply(st, dry); err != nil {
 			return err
 		}
 
-		fmt.Println("==> Installing hy2mgr systemd service")
+		fmt.Println(app.Color("==> Installing hy2mgr systemd service", "1;34"))
 		if err := installManagerUnit(dry); err != nil {
 			return err
 		}
@@ -77,8 +83,11 @@ var installCmd = &cobra.Command{
 			_ = systemd.EnableNow(app.ManagerService)
 		}
 
-		fmt.Println("Done.")
-		fmt.Println("Web UI: http://YOUR_VPS_IP:3333 (ensure firewall allows TCP/3333)")
+		fmt.Println(app.Color("Done.", "1;32"))
+		if url := webURLFromListen(st.Settings.ManageListen); url != "" {
+			fmt.Println(app.Color("Web UI:", "1;32"), url)
+			fmt.Println(app.Color("Tip:", "1;33"), "ensure firewall allows TCP/3333")
+		}
 		return nil
 	},
 }
@@ -88,6 +97,20 @@ func versionArg(v string) string {
 		return ""
 	}
 	return "--version " + v
+}
+
+func webURLFromListen(listen string) string {
+	host, port, err := net.SplitHostPort(listen)
+	if err != nil || port == "" {
+		return ""
+	}
+	if host == "" || host == "0.0.0.0" || host == "::" {
+		host = netutil.PublicIP()
+	}
+	if host == "" {
+		host = "YOUR_VPS_IP"
+	}
+	return "http://" + host + ":" + port
 }
 
 func installManagerUnit(dry bool) error {
